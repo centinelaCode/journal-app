@@ -1,3 +1,6 @@
+import { Box } from "@mui/material"
+
+const drawaerWidth = 240;
 
 export const JournalLayout = ({ children }) => {
    return (
