@@ -1,5 +1,5 @@
 import { signInWithGoogle } from "../../firebase/providers"
-import { chekingCredentials } from "./"
+import { chekingCredentials, login, logout } from "./"
 
 //! thunks login email
 export const checkingAuthentication = ( email, password ) => {
@@ -19,9 +19,14 @@ export const startGoogleSignIn = () => {
       console.log('onGoogleSignIn')
       dispatch( chekingCredentials() )
 
-      // mi funcion para hacer autn con google
+      // result tendra la respuesta si se pudo autenticar o no con google
       const result = await signInWithGoogle();
-      console.log({result})
 
+      // verificamos si tenemos un error en la autenticación
+      if( !result.ok ) return dispatch(logout( result.errorMessage ));
+      // console.log({result})
+
+      // si se autentico correctamente
+      dispatch(login( result ))
    }
 }
