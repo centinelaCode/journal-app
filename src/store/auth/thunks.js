@@ -27,6 +27,6 @@ export const startGoogleSignIn = () => {
       // console.log({result})
 
       // si se autentico correctamente
-      dispatch(login( result ))
+      dispatch(login( result )) 
    }
 }
