@@ -119,5 +119,11 @@ export const loginWithEmailPassword = async({ email, password }) => {
          errorMessage,
       }
    }
+}
 
+
+
+//! Provider para hacer logout (cerrar sesion en firebase)
+export const logoutFirebase = async() => {   
+   return  await FirebaseAuth.signOut();
 }

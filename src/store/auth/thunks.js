@@ -1,4 +1,4 @@
-import { loginWithEmailPassword, registerUserWithEmailPassword, signInWithGoogle } from "../../firebase/providers"
+import { loginWithEmailPassword, logoutFirebase, registerUserWithEmailPassword, signInWithGoogle } from "../../firebase/providers"
 import { chekingCredentials, login, logout } from "./"
 
 //! thunks login email
@@ -70,5 +70,17 @@ export const startLoginWithEmailPassword = ({email, password}) => {
 
       //? si NO hay error logueamos al usaurio le pasamos result que debe traer:{uid, displayName, email, photoURL}
       dispatch(login( result )) 
+   }
+}
+
+
+//! thunks Logout Firebese
+export const startLogout = () => {
+   return async(dispatch) => {
+      
+      await logoutFirebase();
+
+      dispatch( logout() );
+
    }
 }
