@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link as RouterLink } from 'react-router-dom'
 import { Button, Grid, Link, TextField, Typography } from '@mui/material'
 
 import { AuthLayout } from '../layout/AuthLayout'
 import { useForm } from '../../hooks'
+import { startCreatingUserWithEmailPassword } from '../../store/auth'
 
 const formDate = {
   email: '',
@@ -19,6 +21,8 @@ const formValidations = {
 
 export const RegisterPage = () => {
 
+  //? obtenemos el dispatch y creamos un state para saber cuando se hizo submit
+  const dispatch = useDispatch();
   const [formSubmitted, setFormSubmitted] = useState(false)
 
   //? se define que info manejara el form
@@ -28,19 +32,23 @@ export const RegisterPage = () => {
     } = useForm(formDate, formValidations)
 
     
-
+  //? se hace submit  
   const onSubmit = ( event ) => {
     event.preventDefault();
     setFormSubmitted(true); // state para asber cuando hacemos submit
 
-    console.log(formState)
+    if( !isFormValid ) return; // si no pasa la validación 
+
+    // si pasa la validación entonces creamos el user en firebase
+    dispatch( startCreatingUserWithEmailPassword(formState) )
+    // console.log(formState)
   }
 
   return (
     
     <AuthLayout title="Crear Cuenta">
 
-      <h1>FormValid: { isFormValid ? 'Valido' : 'Incorrecto' }</h1>
+      {/* <h1>FormValid: { isFormValid ? 'Valido' : 'Incorrecto' }</h1> */}
 
       <form onSubmit={ onSubmit }>
         <Grid container>

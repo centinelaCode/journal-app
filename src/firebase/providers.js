@@ -1,9 +1,10 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from "firebase/auth";
 import { FirebaseAuth } from "./config";
 
-
+//? Se instancia el provider para hacer la autenticación con google
 const googleProvider = new GoogleAuthProvider();
 
+//! Provider para hacer autenticación con Google
 export const signInWithGoogle = async() => {
    try {
 
@@ -13,10 +14,9 @@ export const signInWithGoogle = async() => {
       // const credentials = GoogleAuthProvider.credentialFromResult( result ); // for credentials info
       // console.log( {credentials} )
 
-      // para obtener la info del user
+      // para obtener la info del usuario(user)
       const user = result.user;
       const { displayName, email, photoURL, uid } = user;
-      // console.log({ user })
 
       return {
          ok: true,
@@ -37,6 +37,38 @@ export const signInWithGoogle = async() => {
 
       return {
          ok: false,
+         errorMessage
+      }
+   }
+}
+
+
+
+//! Provider para hacer autenticación con email / password
+export const registerUserWithEmailPassword = async({ email, password, displayName}) => {
+   try {
+      // console.log({email, password, displayName});
+
+      // funcion que hace el regsiro en firebase
+      const resp = await createUserWithEmailAndPassword(FirebaseAuth, email, password);
+      const { uid, photoURL } = resp.user;
+      // console.log(resp);
+      await updateProfile( FirebaseAuth.currentUser, { displayName } );
+
+
+      // si todo ok
+      return {
+         ok: true,
+         uid, photoURL, email, displayName
+      }
+      
+   } catch (error) {
+
+      const errorMessage = error.message;
+      console.log(errorMessage)     
+
+      return {
+         ok: false, 
          errorMessage
       }
    }
