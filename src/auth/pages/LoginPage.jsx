@@ -1,17 +1,18 @@
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link as RouterLink } from 'react-router-dom'
-import { Button, Grid, Link, TextField, Typography } from '@mui/material'
+import { Alert, Button, Grid, Link, TextField, Typography } from '@mui/material'
 import { Google } from '@mui/icons-material'
 
 import { AuthLayout } from '../layout/AuthLayout'
 import { useForm } from '../../hooks/useForm'
-import { checkingAuthentication, startGoogleSignIn, startLoginWithEmailPassword } from '../../store/auth'
+import { startGoogleSignIn, startLoginWithEmailPassword } from '../../store/auth'
 
 
 export const LoginPage = () => {
 
-  const { status } = useSelector( state => state.auth );
+  //? obtenemos del store el status y el errorMessage
+  const { status, errorMessage } = useSelector( state => state.auth );
 
   const dispatch = useDispatch();
   
@@ -21,13 +22,17 @@ export const LoginPage = () => {
     password: ''
   })
 
+
+  //? obtenmos un bolelan para saber el status y lo memorizamos
+  const isCheckingAuthentication = useMemo(() => status === 'checking', [status])
+
   const isAutenticating = useMemo( () => status === 'checking', [status]);
 
   //? función auth with email
   const onSubmit = ( event ) => {
     event.preventDefault();
 
-    dispatch(startLoginWithEmailPassword({email,password}));
+    dispatch(startLoginWithEmailPassword({ email,password }));
   }
 
   //? funcion auth wit Google
@@ -38,8 +43,6 @@ export const LoginPage = () => {
 
   
   
-
-
 
   return (
     
@@ -73,18 +76,28 @@ export const LoginPage = () => {
           </Grid>
 
           <Grid container spacing={ 2 } sx={{ mb: 2, mt: 1 }}>
-            <Grid item xs={ 12 } sm={ 6 }>
+            
+            <Grid 
+              item 
+              xs={ 12 }
+              display={ !!errorMessage ? '' : 'none'}
+            >
+              <Alert severity="error">{ errorMessage }</Alert>
+            </Grid>
+
+            <Grid item xs={ 12 } sm={ 6 }>              
               <Button 
-                disabled={ isAutenticating }
+                disabled={ isCheckingAuthentication }
                 type="submit" 
                 variant='contained' 
                 fullWidth
               >Login
               </Button>
             </Grid>
+
             <Grid item xs={ 12 } sm={ 6 }>
               <Button 
-                disabled={ isAutenticating }
+                disabled={ isCheckingAuthentication }
                 variant='contained' 
                 fullWidth
                 onClick={ onGoogleSignIn }

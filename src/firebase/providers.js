@@ -78,34 +78,31 @@ export const registerUserWithEmailPassword = async({ email, password, displayNam
 
 
 //! Provider para hacer autenticación con email / password
-export const loginWithEmailPassword = async({email, password}) => {
+export const loginWithEmailPassword = async({ email, password }) => {
    try {
 
       console.log({email, password});
 
       // funcion que hace el regsiro con email/password en firebase
-      const resp = await signInWithEmailAndPassword(FirebaseAuth,email, password);      
+      const resp = await signInWithEmailAndPassword( FirebaseAuth,email, password );      
       // console.log(resp);
 
-      const user = resp.user;
-      console.log(user)
-      console.log( user.displayName, user.email, user.photoURL, user.uid)
+      const {displayName, photoURL, uid} = resp.user;
+      // console.log(user)
+      // console.log(user.displayName, user.email, user.photoURL, user.uid)
 
       return {
          ok: true,
-         displayName: user.displayName, 
-         email: user.email, 
-         photoURL: user.photoURL, 
-         uid: user.uid
+         uid, email, displayName, photoURL
       }
       
    } catch (error) {
       
       // console.log(error)     
       const errorMessageText = error.message;
-      console.log('=======Error Message [I]============')
-      console.log(errorMessageText);
-      console.log('=======Error Message [F]============')
+      // console.log('=======Error Message [I]============')
+      // console.log(errorMessageText);
+      // console.log('=======Error Message [F]============')
 
       let errorMessage;
       switch (errorMessageText) {
