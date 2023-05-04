@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link as RouterLink } from 'react-router-dom'
-import { Button, Grid, Link, TextField, Typography } from '@mui/material'
+import { Alert, Button, Grid, Link, TextField, Typography } from '@mui/material'
 
 import { AuthLayout } from '../layout/AuthLayout'
 import { useForm } from '../../hooks'
@@ -24,6 +24,14 @@ export const RegisterPage = () => {
   //? obtenemos el dispatch y creamos un state para saber cuando se hizo submit
   const dispatch = useDispatch();
   const [formSubmitted, setFormSubmitted] = useState(false)
+
+  //? obtenemos del store el status y el errorMessage
+  const { status, errorMessage } = useSelector( state => state.auth);  
+  // console.log(stateAuth)
+
+  //? obtenmos un bolelan para saber el status y lo memorizamos
+  const isCheckingAuthentication = useMemo(() => status === 'checking', [status])
+
 
   //? se define que info manejara el form
   const { 
@@ -95,13 +103,23 @@ export const RegisterPage = () => {
           </Grid>
 
           <Grid container spacing={ 2 } sx={{ mb: 2, mt: 1 }}>
+            
+            <Grid 
+              item 
+              xs={ 12 }
+              display={ !!errorMessage ? '' : 'none'}
+            >
+              <Alert severity="error">{ errorMessage }</Alert>
+            </Grid>
+
             <Grid item xs={ 12 } >
               <Button
+                disabled={ isCheckingAuthentication }
                 type="submit"
                 variant='contained' 
                 fullWidth>Crear Cuenta
               </Button>
-            </Grid>            
+            </Grid>  
           </Grid>
 
           <Grid container direcction='row' justifyContent='end'>

@@ -40,6 +40,7 @@ export const startCreatingUserWithEmailPassword = ({email, password, displayName
 
       // result tendra la respuesta si se pudo autenticar con email/passworrd en firebase
       const result = await registerUserWithEmailPassword({ email, password, displayName });
+      console.log(result)
 
       //? Si hay error hacemos logout
       if( !result.ok ) return dispatch( logout( result.errorMessage ));
