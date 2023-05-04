@@ -1,4 +1,4 @@
-import { registerUserWithEmailPassword, signInWithGoogle } from "../../firebase/providers"
+import { loginWithEmailPassword, registerUserWithEmailPassword, signInWithGoogle } from "../../firebase/providers"
 import { chekingCredentials, login, logout } from "./"
 
 //! thunks login email
@@ -31,7 +31,7 @@ export const startGoogleSignIn = () => {
 }
 
 
-//! thunks login email/password
+//! thunks Create email/password and login
 export const startCreatingUserWithEmailPassword = ({email, password, displayName}) => {
    return async(dispatch) => {
 
@@ -45,6 +45,28 @@ export const startCreatingUserWithEmailPassword = ({email, password, displayName
       //? Si hay error hacemos logout
       if( !result.ok ) return dispatch( logout( result.errorMessage ));
       // console.log(resp)
+
+      //? si NO hay error logueamos al usaurio le pasamos result que debe traer:{uid, displayName, email, photoURL}
+      dispatch(login( result )) 
+   }
+}
+
+
+//! thunks Login with email/password 
+export const startLoginWithEmailPassword = ({email, password}) => {
+   return async(dispatch) => {
+
+      console.log('onLoginUserEmailPassword')
+      dispatch( chekingCredentials() )
+
+      // ya llegan aqui el email/password
+      // console.log({email, password})
+
+      const result = await loginWithEmailPassword({email, password})
+      console.log(result)
+
+      //? Si hay error hacemos logout
+      if( !result.ok ) return dispatch( logout( result.errorMessage ));
 
       //? si NO hay error logueamos al usaurio le pasamos result que debe traer:{uid, displayName, email, photoURL}
       dispatch(login( result )) 
